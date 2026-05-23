@@ -8,8 +8,7 @@ from environment import Map
 
 
 def _reconstruct_path(parents, goal):
-    # parents keeps "where did I come from?" for each node.
-    # So from the goal we walk backwards until we reach the start.
+    # From the goal we walk backwards until we reach the start using parents.
     path = [goal]
     current = goal
     while parents[current] is not None:
@@ -22,8 +21,6 @@ def _reconstruct_path(parents, goal):
 def bfs(env):
     initial_state = env.get_start_state()
 
-    # BFS uses a normal queue: first node that enters, first node that leaves.
-    # This makes the first found answer have the minimum number of nodes/edges.
     frontier = deque([initial_state])
     parents = {initial_state: None}
     visited = {initial_state}
@@ -60,7 +57,7 @@ def dls(env):
     initial_state = env.get_start_state()
 
     # In path-finding problems we usually do not know a good depth limit.
-    # So this is actually IDS: DLS with limits 0, 1, 2, ... until it finds the goal.
+    # So this is IDS: DLS with limits 0, 1, 2, ... until it finds the goal.
     depth_limit = 0
 
     while True:
@@ -188,19 +185,21 @@ def bds(env):
     yield ("fail", None)
 
 
-def Astar(env):
+def aStar(env):
     initial_state = env.get_start_state()
     goal_state = env.get_goal_state()
 
+    WEIGHT = 2.5       
     def heuristic(state):
-        # Straight-line distance is a simple admissible heuristic:
-        # it never overestimates the actual road distance.
-        return math.hypot(goal_state[0] - state[0], goal_state[1] - state[1])
+        dx = goal_state[0] - state[0]
+        dy = goal_state[1] - state[1]
+        return math.hypot(dx, dy) * WEIGHT
 
-    # heap item: (f = g + h, h, tie_breaker, state)
-    # tie_breaker avoids Python comparing states when the numbers are equal.
+
     counter = itertools.count()
-    frontier = [(heuristic(initial_state), heuristic(initial_state), next(counter), initial_state)]
+    h0 = heuristic(initial_state)
+    # Tie‑breaker: When f is equal, prefer larger h
+    frontier = [(h0, -h0, next(counter), initial_state)]   # note the -h0
     parents = {initial_state: None}
     best_cost = {initial_state: 0}
     expanded = set()
@@ -212,7 +211,6 @@ def Astar(env):
 
         if current_state in expanded:
             continue
-
         frontier_states.discard(current_state)
 
         if env.is_goal_state(current_state):
@@ -227,12 +225,12 @@ def Astar(env):
             if new_cost >= best_cost.get(successor, math.inf):
                 continue
 
-            # Found a cheaper way to reach successor.
             parents[successor] = current_state
             best_cost[successor] = new_cost
-            h_value = heuristic(successor)
-            priority = new_cost + h_value
-            heapq.heappush(frontier, (priority, h_value, next(counter), successor))
+            h_val = heuristic(successor)   # Heuristic estimate of remaining cost from a node to the goal
+            priority = new_cost + h_val
+            # push with tie‑breaker (-h_val) so deeper nodes pop first
+            heapq.heappush(frontier, (priority, -h_val, next(counter), successor))
 
             if successor not in expanded and successor not in frontier_states:
                 frontier_states.add(successor)
@@ -242,13 +240,11 @@ def Astar(env):
 
 
 if __name__ == "__main__":
-    # environment.py loads map.png, nodes.json and edges.json with relative paths.
-    # This makes the program work even if the IDE runs it from another folder.
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
     map = Map(
-        search_algorithm=Astar,
+        search_algorithm=bfs,
         seed=42,
-        delay=0
+        delay=5
     )
     map.start()
