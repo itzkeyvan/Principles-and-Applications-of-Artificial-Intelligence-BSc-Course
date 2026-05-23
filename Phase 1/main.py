@@ -188,7 +188,7 @@ def bds(env):
     yield ("fail", None)
 
 
-def astar(env):
+def Astar(env):
     initial_state = env.get_start_state()
     goal_state = env.get_goal_state()
 
@@ -197,65 +197,20 @@ def astar(env):
         # it never overestimates the actual road distance.
         return math.hypot(goal_state[0] - state[0], goal_state[1] - state[1])
 
-    def heuristic_bonus(state):
-        # For the bonus part, I precompute the exact remaining cost to the goal
-        # for reachable nodes. If a node is not in that table, I fall back to
-        # straight-line distance.
-        return exact_goal_distances.get(state, heuristic(state))
-
-    def build_exact_goal_distances():
-        # First I discover the reachable part of the graph from the start.
-        # At the same time, I build reverse edges so Dijkstra can run backward
-        # from the goal.
-        graph = {}
-        reverse_graph = {}
-        queue = deque([initial_state])
-        seen = {initial_state}
-
-        while queue:
-            state = queue.popleft()
-            successors = env.get_successors(state)
-            graph[state] = successors
-
-            for successor, cost in successors:
-                reverse_graph.setdefault(successor, []).append((state, cost))
-                if successor not in seen:
-                    seen.add(successor)
-                    queue.append(successor)
-
-        # Dijkstra from the goal on the reversed graph gives the real remaining
-        # cost from every reachable node to the goal.
-        distances = {goal_state: 0}
-        heap = [(0, goal_state)]
-
-        while heap:
-            distance, state = heapq.heappop(heap)
-            if distance > distances[state]:
-                continue
-
-            for predecessor, cost in reverse_graph.get(state, []):
-                new_distance = distance + cost
-                if new_distance < distances.get(predecessor, math.inf):
-                    distances[predecessor] = new_distance
-                    heapq.heappush(heap, (new_distance, predecessor))
-
-        return graph, distances
-
-    graph_cache, exact_goal_distances = build_exact_goal_distances()
-
-    # heap item: (f = g + h, h, g, tie_breaker, state)
+    # heap item: (f = g + h, h, tie_breaker, state)
     # tie_breaker avoids Python comparing states when the numbers are equal.
     counter = itertools.count()
-    frontier = [(heuristic_bonus(initial_state), heuristic_bonus(initial_state), 0, next(counter), initial_state)]
+    frontier = [(heuristic(initial_state), heuristic(initial_state), next(counter), initial_state)]
     parents = {initial_state: None}
     best_cost = {initial_state: 0}
     expanded = set()
     frontier_states = {initial_state}
 
     while frontier:
-        _, _, current_cost, _, current_state = heapq.heappop(frontier)
+        _, _, _, current_state = heapq.heappop(frontier)
+        current_cost = best_cost[current_state]
 
-        if current_cost > best_cost.get(current_state, math.inf) or current_state in expanded:
+        if current_state in expanded:
             continue
 
         frontier_states.discard(current_state)
@@ -267,8 +222,7 @@ def astar(env):
         expanded.add(current_state)
         yield ("expand", current_state)
 
-        successors = graph_cache[current_state] if current_state in graph_cache else env.get_successors(current_state)
-        for successor, step_cost in successors:
+        for successor, step_cost in env.get_successors(current_state):
             new_cost = current_cost + step_cost
             if new_cost >= best_cost.get(successor, math.inf):
                 continue
@@ -276,8 +230,9 @@ def astar(env):
             # Found a cheaper way to reach successor.
             parents[successor] = current_state
             best_cost[successor] = new_cost
-            priority = new_cost + heuristic_bonus(successor)
-            heapq.heappush(frontier, (priority, heuristic_bonus(successor), new_cost, next(counter), successor))
+            h_value = heuristic(successor)
+            priority = new_cost + h_value
+            heapq.heappush(frontier, (priority, h_value, next(counter), successor))
 
             if successor not in expanded and successor not in frontier_states:
                 frontier_states.add(successor)
@@ -292,8 +247,8 @@ if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
     map = Map(
-        search_algorithm=dls,
+        search_algorithm=Astar,
         seed=42,
-        delay=5
+        delay=0
     )
     map.start()

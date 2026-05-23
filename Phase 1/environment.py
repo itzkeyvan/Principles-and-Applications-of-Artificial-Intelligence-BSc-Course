@@ -170,6 +170,7 @@ class Map:
         self.goal_var = tk.StringVar(value="Goal: -")
         self.status_var = tk.StringVar(value="Status: Ready")
         self.cost_var = tk.StringVar(value="Path Cost: -")
+        self.path_size_var = tk.StringVar(value="Path Size: -")
         self.expanded_var = tk.StringVar(value="Expanded Nodes: 0")
         self.runtime_var = tk.StringVar(value="Runtime: 0.00 s")
 
@@ -365,6 +366,7 @@ class Map:
 
         tk.Label(search_info, textvariable=self.status_var, bg="#f0fdf4", fg=TEXT_DARK, anchor=tk.W, wraplength=200).pack(fill=tk.X, pady=2)
         tk.Label(search_info, textvariable=self.cost_var, bg="#f0fdf4", fg=TEXT_DARK, anchor=tk.W).pack(fill=tk.X, pady=2)
+        tk.Label(search_info, textvariable=self.path_size_var, bg="#f0fdf4", fg=TEXT_DARK, anchor=tk.W).pack(fill=tk.X, pady=2)
         tk.Label(search_info, textvariable=self.expanded_var, bg="#f0fdf4", fg=TEXT_DARK, anchor=tk.W).pack(fill=tk.X, pady=2)
         tk.Label(search_info, textvariable=self.runtime_var, bg="#f0fdf4", fg=TEXT_DARK, anchor=tk.W).pack(fill=tk.X, pady=2)
 
@@ -1028,6 +1030,7 @@ class Map:
         algo_name = self._get_search_algorithm_label()
         self.status_var.set(f"Status: {algo_name} running...")
         self.cost_var.set("Path Cost: -")
+        self.path_size_var.set("Path Size: -")
         self.expanded_var.set("Expanded Nodes: 0")
         self.runtime_var.set("Runtime: 0.00 s")
 
@@ -1114,6 +1117,7 @@ class Map:
             self.canvas.tag_raise("node")
 
             self.cost_var.set(f"Path Cost: {self.search_path_cost:.2f}")
+            self.path_size_var.set(f"Path Size: {len(path)}")
             self.status_var.set("Status: Path found.")
             self.search_running = False
             self.stop_requested = False
@@ -1125,6 +1129,7 @@ class Map:
             self.stop_requested = False
             self.status_var.set("Status: No path found.")
             self.cost_var.set("Path Cost: -")
+            self.path_size_var.set("Path Size: -")
             self._set_final_runtime()
             self.refresh_control_states()
 
@@ -1166,6 +1171,7 @@ class Map:
 
         self.status_var.set("Status: Ready")
         self.cost_var.set("Path Cost: -")
+        self.path_size_var.set("Path Size: -")
         self.expanded_var.set("Expanded Nodes: 0")
         self.runtime_var.set("Runtime: 0.00 s")
 
