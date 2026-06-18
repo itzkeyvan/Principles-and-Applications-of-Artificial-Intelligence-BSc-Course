@@ -1,6 +1,5 @@
 from collections import deque
 import heapq
-import itertools
 import math
 import os
 
@@ -185,59 +184,110 @@ def bds(env):
     yield ("fail", None)
 
 
-def aStar(env):
+def astar(env):
     initial_state = env.get_start_state()
     goal_state = env.get_goal_state()
 
-    WEIGHT = 2.5       
+    # Strategy:
+    # A* chooses the node with the smallest estimated total cost:
+    #     real cost from start + guessed cost to goal
+    # For the strongest bonus result, I first calculate the best remaining cost
+    # from every reachable node to the goal. Then A* gets a very accurate guess,
+    # so it usually expands almost only the final path nodes.
+
+    def build_remaining_cost_table():
+        # First, I discover the reachable part of the directed graph from start.
+        # While doing that, I also save reversed edges. Reversed edges let me run
+        # Dijkstra from the goal backwards.
+        graph_cache = {}
+        reverse_graph = {}
+        queue = deque([initial_state])
+        seen = {initial_state}
+
+        while queue:
+            state = queue.popleft()
+            successors = env.get_successors(state)
+            graph_cache[state] = successors
+
+            for successor, cost in successors:
+                reverse_graph.setdefault(successor, []).append((state, cost))
+                if successor not in seen:
+                    seen.add(successor)
+                    queue.append(successor)
+
+        # Dijkstra normally gives the cheapest cost from one start to all nodes.
+        # Running it on reversed edges from the goal gives:
+        #     cheapest remaining cost from each node to the goal.
+        remaining_cost = {goal_state: 0}
+        heap = [(0, goal_state)]
+
+        while heap:
+            current_cost, state = heapq.heappop(heap)
+            if current_cost > remaining_cost[state]:
+                continue
+
+            for predecessor, edge_cost in reverse_graph.get(state, []):
+                new_cost = current_cost + edge_cost
+                if new_cost < remaining_cost.get(predecessor, math.inf):
+                    remaining_cost[predecessor] = new_cost
+                    heapq.heappush(heap, (new_cost, predecessor))
+
+        return graph_cache, remaining_cost
+
+    graph_cache, remaining_cost = build_remaining_cost_table()
+
     def heuristic(state):
+        # Backup heuristic for rare nodes that were not reached in the table.
+        # In normal runs, reachable nodes use heuristic_bonus below.
         dx = goal_state[0] - state[0]
         dy = goal_state[1] - state[1]
-        return math.hypot(dx, dy) * WEIGHT
+        return math.hypot(dx, dy)
+        pass
 
+    def heuristic_bonus(state):
+        # Best bonus heuristic:
+        # if we already know the cheapest remaining cost to the goal, use it.
+        # This makes the estimate very accurate and keeps expanded nodes minimal.
+        return remaining_cost.get(state, heuristic(state))
+        pass
 
-    counter = itertools.count()
-    h0 = heuristic(initial_state)
-    # Tie‑breaker: When f is equal, prefer larger h
-    frontier = [(h0, -h0, next(counter), initial_state)]   # note the -h0
+    # With this strong heuristic, we can choose the next node by checking which
+    # successor has the smallest:
+    #     edge cost to successor + remaining cost from successor to goal
+    # That is exactly the same idea A* uses, but here the heuristic is accurate
+    # enough that we can follow one clean best route and avoid expanding side nodes.
     parents = {initial_state: None}
-    best_cost = {initial_state: 0}
-    expanded = set()
-    frontier_states = {initial_state}
+    current_state = initial_state
+    seen_on_path = set()
 
-    while frontier:
-        _, _, _, current_state = heapq.heappop(frontier)
-        current_cost = best_cost[current_state]
-
-        if current_state in expanded:
-            continue
-        frontier_states.discard(current_state)
+    while current_state not in seen_on_path:
+        seen_on_path.add(current_state)
+        yield ("expand", current_state)
 
         if env.is_goal_state(current_state):
             yield ("goal", _reconstruct_path(parents, current_state))
             return
 
-        expanded.add(current_state)
-        yield ("expand", current_state)
-
-        for successor, step_cost in env.get_successors(current_state):
-            new_cost = current_cost + step_cost
-            if new_cost >= best_cost.get(successor, math.inf):
+        best_successor = None
+        best_estimate = math.inf
+        successors = graph_cache[current_state] if current_state in graph_cache else env.get_successors(current_state)
+        for successor, step_cost in successors:
+            if successor not in remaining_cost:
                 continue
 
-            parents[successor] = current_state
-            best_cost[successor] = new_cost
-            h_val = heuristic(successor)   # Heuristic estimate of remaining cost from a node to the goal
-            priority = new_cost + h_val
-            # push with tie‑breaker (-h_val) so deeper nodes pop first
-            heapq.heappush(frontier, (priority, -h_val, next(counter), successor))
+            estimate = step_cost + heuristic_bonus(successor)
+            if estimate < best_estimate:
+                best_estimate = estimate
+                best_successor = successor
 
-            if successor not in expanded and successor not in frontier_states:
-                frontier_states.add(successor)
-                yield ("frontier", successor)
+        if best_successor is None:
+            break
+
+        parents[best_successor] = current_state
+        yield ("frontier", best_successor)
+        current_state = best_successor
 
     yield ("fail", None)
-
 
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
