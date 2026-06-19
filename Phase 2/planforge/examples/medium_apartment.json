@@ -1,0 +1,114 @@
+{
+  "width": 10,
+  "height": 8,
+  "entrance": [
+    0,
+    7
+  ],
+  "minCoverageRatio": 0.72,
+  "requireConnected": true,
+  "rooms": [
+    {
+      "name": "Hall",
+      "minArea": 8,
+      "maxArea": 10,
+      "minW": 2,
+      "maxW": 2,
+      "minH": 4,
+      "maxH": 5
+    },
+    {
+      "name": "Bathroom",
+      "minArea": 4,
+      "maxArea": 6,
+      "minW": 2,
+      "maxW": 3,
+      "minH": 2,
+      "maxH": 3
+    },
+    {
+      "name": "Living",
+      "minArea": 16,
+      "maxArea": 20,
+      "minW": 4,
+      "maxW": 5,
+      "minH": 4,
+      "maxH": 4,
+      "needsExterior": true
+    },
+    {
+      "name": "Kitchen",
+      "minArea": 8,
+      "maxArea": 12,
+      "minW": 2,
+      "maxW": 3,
+      "minH": 4,
+      "maxH": 4,
+      "needsExterior": true
+    },
+    {
+      "name": "Bedroom1",
+      "minArea": 12,
+      "maxArea": 16,
+      "minW": 3,
+      "maxW": 4,
+      "minH": 3,
+      "maxH": 4,
+      "needsExterior": true
+    },
+    {
+      "name": "Bedroom2",
+      "minArea": 10,
+      "maxArea": 16,
+      "minW": 3,
+      "maxW": 4,
+      "minH": 3,
+      "maxH": 4,
+      "needsExterior": true
+    },
+    {
+      "name": "Storage",
+      "minArea": 2,
+      "maxArea": 4,
+      "minW": 1,
+      "maxW": 2,
+      "minH": 1,
+      "maxH": 2
+    }
+  ],
+  "constraints": [
+    {
+      "type": "near_entrance",
+      "room": "Hall",
+      "max_distance": 3
+    },
+    {
+      "type": "adjacent",
+      "a": "Hall",
+      "b": "Living"
+    },
+    {
+      "type": "adjacent",
+      "a": "Hall",
+      "b": "Bathroom"
+    },
+    {
+      "type": "adjacent",
+      "a": "Living",
+      "b": "Kitchen"
+    },
+    {
+      "type": "not_adjacent",
+      "a": "Kitchen",
+      "b": "Bathroom"
+    },
+    {
+      "type": "touches_boundary",
+      "room": "Bedroom1"
+    },
+    {
+      "type": "touches_boundary",
+      "room": "Bedroom2"
+    }
+  ]
+}

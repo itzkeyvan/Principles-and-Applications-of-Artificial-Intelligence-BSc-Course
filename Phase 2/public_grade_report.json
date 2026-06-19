@@ -1,0 +1,105 @@
+{
+  "grader": "PlanForge Public Self-Check",
+  "note": "This public grader is only a self-check. Final grades are computed with a different private grader and hidden cases.",
+  "required_score": 20.0,
+  "required_max": 100.0,
+  "required_percent": 20.0,
+  "optional_score": 0.0,
+  "optional_max": 30.0,
+  "optional_percent": 0.0,
+  "total_score": 20.0,
+  "total_max": 130.0,
+  "total_percent": 15.38,
+  "rows": [
+    {
+      "section": "required",
+      "name": "Required API imports",
+      "earned": 10.0,
+      "possible": 10.0,
+      "passed": true,
+      "detail": "all required student functions are importable"
+    },
+    {
+      "section": "required",
+      "name": "MRV/LCV smoke check",
+      "earned": 0.0,
+      "possible": 15.0,
+      "passed": false,
+      "detail": "exception: NotImplementedError: TODO: implement select_unassigned_variable() in student/heuristics.py"
+    },
+    {
+      "section": "required",
+      "name": "Valid layout on easy_apartment.json",
+      "earned": 0.0,
+      "possible": 22.0,
+      "passed": false,
+      "detail": "valid=False, quality=0.0/100, nodes=0, solutions=0, errors=['no valid assignment returned'], status=not_implemented, error=TODO: implement solve() in student/solver.py"
+    },
+    {
+      "section": "required",
+      "name": "Valid layout on medium_apartment.json",
+      "earned": 0.0,
+      "possible": 22.0,
+      "passed": false,
+      "detail": "valid=False, quality=0.0/100, nodes=0, solutions=0, errors=['no valid assignment returned'], status=not_implemented, error=TODO: implement solve() in student/solver.py"
+    },
+    {
+      "section": "required",
+      "name": "Unsat detection",
+      "earned": 0.0,
+      "possible": 12.0,
+      "passed": false,
+      "detail": "assignment_found=False, status=not_implemented"
+    },
+    {
+      "section": "required",
+      "name": "Backtracking instrumentation",
+      "earned": 0.0,
+      "possible": 9.0,
+      "passed": false,
+      "detail": "nodes=0, assignments=0, backtracks=0, checks=0"
+    },
+    {
+      "section": "required",
+      "name": "Project package sanity",
+      "earned": 10.0,
+      "possible": 10.0,
+      "passed": true,
+      "detail": "example files present"
+    },
+    {
+      "section": "optional",
+      "name": "Hard-case quality under limits",
+      "earned": 0.0,
+      "possible": 7.0,
+      "passed": false,
+      "detail": "quality=0.0/100, valid=False, solutions=0, notes=['no assignment']"
+    },
+    {
+      "section": "optional",
+      "name": "Bonus challenge stress test",
+      "earned": 0.0,
+      "possible": 10.0,
+      "passed": false,
+      "detail": "quality=0.0/100, coverage=0.0%, solutions=0, nodes=0"
+    },
+    {
+      "section": "optional",
+      "name": "Optimization / pruning on challenge",
+      "earned": 0.0,
+      "possible": 8.0,
+      "passed": false,
+      "detail": "solutions_seen=0, pruned_values=0"
+    },
+    {
+      "section": "optional",
+      "name": "Soft score function",
+      "earned": 0.0,
+      "possible": 5.0,
+      "passed": false,
+      "detail": "expected meaningful non-constant scores; easy=None, hard=None"
+    }
+  ],
+  "python": "3.11.9",
+  "platform": "Windows-10-10.0.26200-SP0"
+}

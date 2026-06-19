@@ -1,0 +1,59 @@
+{
+  "width": 6,
+  "height": 5,
+  "entrance": [
+    0,
+    4
+  ],
+  "minCoverageRatio": 0.75,
+  "requireConnected": true,
+  "rooms": [
+    {
+      "name": "Living",
+      "minArea": 12,
+      "maxArea": 12,
+      "minW": 4,
+      "maxW": 4,
+      "minH": 3,
+      "maxH": 3,
+      "needsExterior": true
+    },
+    {
+      "name": "Kitchen",
+      "minArea": 9,
+      "maxArea": 9,
+      "minW": 3,
+      "maxW": 3,
+      "minH": 3,
+      "maxH": 3,
+      "needsExterior": true
+    },
+    {
+      "name": "Bedroom",
+      "minArea": 10,
+      "maxArea": 10,
+      "minW": 5,
+      "maxW": 5,
+      "minH": 2,
+      "maxH": 2,
+      "needsExterior": true
+    }
+  ],
+  "constraints": [
+    {
+      "type": "adjacent",
+      "a": "Living",
+      "b": "Kitchen"
+    },
+    {
+      "type": "adjacent",
+      "a": "Kitchen",
+      "b": "Bedroom"
+    },
+    {
+      "type": "not_adjacent",
+      "a": "Living",
+      "b": "Bedroom"
+    }
+  ]
+}

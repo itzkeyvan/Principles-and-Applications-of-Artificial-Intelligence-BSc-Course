@@ -1,0 +1,156 @@
+{
+  "width": 12,
+  "height": 8,
+  "entrance": [
+    0,
+    7
+  ],
+  "minCoverageRatio": 0.7,
+  "requireConnected": true,
+  "rooms": [
+    {
+      "name": "Hall",
+      "minArea": 8,
+      "maxArea": 10,
+      "minW": 2,
+      "maxW": 2,
+      "minH": 4,
+      "maxH": 5
+    },
+    {
+      "name": "Bathroom",
+      "minArea": 4,
+      "maxArea": 6,
+      "minW": 2,
+      "maxW": 3,
+      "minH": 2,
+      "maxH": 2
+    },
+    {
+      "name": "Living",
+      "minArea": 18,
+      "maxArea": 20,
+      "minW": 5,
+      "maxW": 5,
+      "minH": 4,
+      "maxH": 4,
+      "needsExterior": true
+    },
+    {
+      "name": "Kitchen",
+      "minArea": 8,
+      "maxArea": 12,
+      "minW": 2,
+      "maxW": 3,
+      "minH": 4,
+      "maxH": 4,
+      "needsExterior": true
+    },
+    {
+      "name": "Bedroom1",
+      "minArea": 12,
+      "maxArea": 16,
+      "minW": 3,
+      "maxW": 4,
+      "minH": 4,
+      "maxH": 4,
+      "needsExterior": true
+    },
+    {
+      "name": "Bedroom2",
+      "minArea": 10,
+      "maxArea": 12,
+      "minW": 3,
+      "maxW": 3,
+      "minH": 4,
+      "maxH": 4,
+      "needsExterior": true
+    },
+    {
+      "name": "Office",
+      "minArea": 6,
+      "maxArea": 8,
+      "minW": 3,
+      "maxW": 4,
+      "minH": 2,
+      "maxH": 2,
+      "needsExterior": true
+    },
+    {
+      "name": "Balcony",
+      "minArea": 4,
+      "maxArea": 8,
+      "minW": 2,
+      "maxW": 2,
+      "minH": 2,
+      "maxH": 4,
+      "needsExterior": true
+    },
+    {
+      "name": "Closet",
+      "minArea": 2,
+      "maxArea": 4,
+      "minW": 1,
+      "maxW": 2,
+      "minH": 1,
+      "maxH": 2
+    },
+    {
+      "name": "Storage",
+      "minArea": 4,
+      "maxArea": 6,
+      "minW": 2,
+      "maxW": 3,
+      "minH": 2,
+      "maxH": 2
+    }
+  ],
+  "constraints": [
+    {
+      "type": "near_entrance",
+      "room": "Hall",
+      "max_distance": 3
+    },
+    {
+      "type": "adjacent",
+      "a": "Hall",
+      "b": "Living"
+    },
+    {
+      "type": "adjacent",
+      "a": "Hall",
+      "b": "Bathroom"
+    },
+    {
+      "type": "adjacent",
+      "a": "Living",
+      "b": "Kitchen"
+    },
+    {
+      "type": "adjacent",
+      "a": "Kitchen",
+      "b": "Balcony"
+    },
+    {
+      "type": "not_adjacent",
+      "a": "Kitchen",
+      "b": "Bathroom"
+    },
+    {
+      "type": "touches_boundary",
+      "room": "Bedroom1"
+    },
+    {
+      "type": "touches_boundary",
+      "room": "Bedroom2"
+    },
+    {
+      "type": "touches_boundary",
+      "room": "Office"
+    },
+    {
+      "type": "touches_boundary",
+      "room": "Balcony"
+    }
+  ]
+}
