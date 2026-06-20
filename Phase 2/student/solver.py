@@ -1,6 +1,7 @@
 from __future__ import annotations
 from planforge.core.models import CSPProblem, Assignment, Rect
 from planforge.core.engine import SolverContext
+from .consistency import is_consistent
 
 # -----------------------------------------------------------------------------
 # STUDENT TODO FILE
@@ -28,7 +29,9 @@ def solve(problem: CSPProblem, ctx: SolverContext) -> Assignment | None:
       3) call your recursive backtrack(...)
       4) return ctx.best_assignment, or None if no solution was found
     """
-    raise NotImplementedError('TODO: implement solve() in student/solver.py')
+    domains = ctx.copy_domains()
+    backtrack(problem, {}, domains, ctx)
+    return ctx.best_assignment
 
 
 def backtrack(problem: CSPProblem, assignment: Assignment, domains: dict[str, list[Rect]], ctx: SolverContext) -> None:
@@ -44,8 +47,28 @@ def backtrack(problem: CSPProblem, assignment: Assignment, domains: dict[str, li
     These calls do not change correctness; they only let the app animate the
     exact search path produced by your algorithm.
     """
-    raise NotImplementedError('TODO: implement backtrack() in student/solver.py')
+    # We don't use MRV/LCV yet, we just take the first variable without a value
+    if is_complete(problem, assignment):
+        # In step 5, we add ctx.on_solution here
+        return
 
+    # Select the first variable without a value
+    for var in problem.variables:
+        if var not in assignment:
+            break
+    else:
+        return  # Shouldn't happen.
+
+    # Test all values ​​in order (no LCV)
+    for value in domains[var]:
+        if is_consistent(problem, assignment, var, value):
+            assignment[var] = value
+            backtrack(problem, assignment, domains, ctx)
+            # If the answer is found, we will return.
+            if ctx.best_assignment is not None:
+                assignment.pop(var, None)
+                return
+            assignment.pop(var, None)
 
 def is_complete(problem: CSPProblem, assignment: Assignment) -> bool:
     """Return True iff every variable has a value."""
