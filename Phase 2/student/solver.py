@@ -29,8 +29,13 @@ def solve(problem: CSPProblem, ctx: SolverContext) -> Assignment | None:
       3) call your recursive backtrack(...)
       4) return ctx.best_assignment, or None if no solution was found
     """
+    # Copy the domains so we don't mutate the original problem
     domains = ctx.copy_domains()
+
+    # Start recursive search
     backtrack(problem, {}, domains, ctx)
+
+    # After search, return the best assignment (if any) stored in ctx
     return ctx.best_assignment
 
 
@@ -47,12 +52,16 @@ def backtrack(problem: CSPProblem, assignment: Assignment, domains: dict[str, li
     These calls do not change correctness; they only let the app animate the
     exact search path produced by your algorithm.
     """
+    ctx.on_node()           # Node count
+    if ctx.should_stop:
+        return
+    
     # We don't use MRV/LCV yet, we just take the first variable without a value
     if is_complete(problem, assignment):
-        # In step 5, we add ctx.on_solution here
+        ctx.on_solution(assignment)        # Validate and record answers 
         return
 
-    # Select the first variable without a value
+    # Select the first variable without a value (Later replaced by MRV)
     for var in problem.variables:
         if var not in assignment:
             break
@@ -61,6 +70,8 @@ def backtrack(problem: CSPProblem, assignment: Assignment, domains: dict[str, li
 
     # Test all values ​​in order (no LCV)
     for value in domains[var]:
+        ctx.on_assignment_tried()     # Count the number of assignments tried
+        ctx.on_consistency_check()    # Count compatibility checks
         if is_consistent(problem, assignment, var, value):
             assignment[var] = value
             backtrack(problem, assignment, domains, ctx)
@@ -69,6 +80,8 @@ def backtrack(problem: CSPProblem, assignment: Assignment, domains: dict[str, li
                 assignment.pop(var, None)
                 return
             assignment.pop(var, None)
+
+    ctx.on_backtrack()     # Record a backtrack (the current branch failed)
 
 def is_complete(problem: CSPProblem, assignment: Assignment) -> bool:
     """Return True iff every variable has a value."""
