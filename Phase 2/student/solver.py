@@ -49,4 +49,4 @@ def backtrack(problem: CSPProblem, assignment: Assignment, domains: dict[str, li
 
 def is_complete(problem: CSPProblem, assignment: Assignment) -> bool:
     """Return True iff every variable has a value."""
-    raise NotImplementedError('TODO: implement is_complete() in student/solver.py')
+    return all(var in assignment for var in problem.variables)

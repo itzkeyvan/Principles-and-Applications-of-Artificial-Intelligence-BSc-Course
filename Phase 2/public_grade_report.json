@@ -100,6 +100,6 @@
       "detail": "expected meaningful non-constant scores; easy=None, hard=None"
     }
   ],
-  "python": "3.11.9",
-  "platform": "Windows-10-10.0.26200-SP0"
+  "python": "3.14.5",
+  "platform": "Windows-11-10.0.26200-SP0"
 }
