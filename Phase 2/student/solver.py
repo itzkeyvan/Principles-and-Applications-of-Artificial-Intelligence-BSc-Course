@@ -2,7 +2,8 @@ from __future__ import annotations
 from planforge.core.models import CSPProblem, Assignment, Rect
 from planforge.core.engine import SolverContext
 from .consistency import is_consistent
-from .heuristics import select_unassigned_variable
+from .heuristics import select_unassigned_variable, order_domain_values
+
 
 # -----------------------------------------------------------------------------
 # STUDENT TODO FILE
@@ -62,12 +63,14 @@ def backtrack(problem: CSPProblem, assignment: Assignment, domains: dict[str, li
         ctx.on_solution(assignment)        # Validate and record answers 
         return
 
+    # Step 6: MRV: pick the variable with the fewest remaining consistent values
     # In the backtrack function, instead of the original for loop, we use this for MRV (Step 6):
     # MRV causes variables with smaller ranges to be selected first, so that invalid values are removed from the domain earlier
     var = select_unassigned_variable(problem, assignment, domains)
 
-    # Test all values ​​in order (no LCV)
-    for value in domains[var]:
+    # Step 7: Use LCV (Least Constraining Value) to order the domain values
+    # LCV heuristic: try values that leave more options for other variables first
+    for value in order_domain_values(problem, var, assignment, domains):
         ctx.on_assignment_tried()     # Count the number of assignments tried
         ctx.on_consistency_check()    # Count compatibility checks
         if is_consistent(problem, assignment, var, value):

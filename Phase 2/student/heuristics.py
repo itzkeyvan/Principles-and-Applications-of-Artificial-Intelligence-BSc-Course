@@ -50,4 +50,26 @@ def order_domain_values(problem: CSPProblem, variable: str, assignment: Assignme
     Required: implement LCV (least constraining value). Values that remove
     fewer options from the remaining variables should be tried earlier.
     """
-    raise NotImplementedError('TODO: implement order_domain_values() in student/heuristics.py')
+
+    # Goal: Sort the values ​​so that the least restrictive value is tried first.
+
+    scored = []
+
+    for val in domains[variable]:
+        temp_assignment = dict(assignment)
+        temp_assignment[variable] = val
+
+        # Count the number of consistent values ​​for other variables
+        total = 0
+        for other_var in problem.variables:
+            if other_var == variable or other_var in assignment:
+                continue
+            for other_val in domains[other_var]:
+                if is_consistent(problem, temp_assignment, other_var, other_val):
+                    total += 1
+
+        scored.append((val, total))
+
+    # Descending sort (highest number = least amount of constraints)
+    scored.sort(key=lambda x: x[1], reverse=True)
+    return [val for val, _ in scored]
