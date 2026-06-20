@@ -1,6 +1,6 @@
 from __future__ import annotations
 from planforge.core.models import CSPProblem, Assignment, Rect
-
+from planforge.core.geometry import inside_boundary, overlaps
 # -----------------------------------------------------------------------------
 # STUDENT TODO FILE
 # Required function:
@@ -23,4 +23,19 @@ def is_consistent(problem: CSPProblem, assignment: Assignment, variable: str, va
       - planforge.core.geometry
       - planforge.core.constraints
     """
+    # 1) inside_boundary
+    if not inside_boundary(value, problem.width, problem.height):
+        return False
+
+    # 2) Allowed area
+    spec = problem.room_specs[variable]
+    if not (spec.min_area <= value.area <= spec.max_area):
+        return False
+
+    # 3) No overlap
+    for assigned_var, assigned_rect in assignment.items():
+        if overlaps(value, assigned_rect):
+            return False
+
+    return True
     raise NotImplementedError('TODO: implement is_consistent() in student/consistency.py')
