@@ -4,12 +4,12 @@
   "required_score": 100.0,
   "required_max": 100.0,
   "required_percent": 100.0,
-  "optional_score": 0.0,
+  "optional_score": 9.0,
   "optional_max": 30.0,
-  "optional_percent": 0.0,
-  "total_score": 100.0,
+  "optional_percent": 30.0,
+  "total_score": 109.0,
   "total_max": 130.0,
-  "total_percent": 76.92,
+  "total_percent": 83.85,
   "rows": [
     {
       "section": "required",
@@ -33,7 +33,7 @@
       "earned": 22.0,
       "possible": 22.0,
       "passed": true,
-      "detail": "valid=True, quality=81.7/100, nodes=7, solutions=1"
+      "detail": "valid=True, quality=91.46/100, nodes=1099, solutions=863"
     },
     {
       "section": "required",
@@ -41,7 +41,7 @@
       "earned": 22.0,
       "possible": 22.0,
       "passed": true,
-      "detail": "valid=True, quality=78.87/100, nodes=8, solutions=1"
+      "detail": "valid=True, quality=82.67/100, nodes=2124, solutions=1500"
     },
     {
       "section": "required",
@@ -57,7 +57,7 @@
       "earned": 9.0,
       "possible": 9.0,
       "passed": true,
-      "detail": "nodes=8, assignments=115, backtracks=7, checks=115"
+      "detail": "nodes=2124, assignments=2123, backtracks=113, checks=2123"
     },
     {
       "section": "required",
@@ -73,7 +73,7 @@
       "earned": 0.0,
       "possible": 7.0,
       "passed": false,
-      "detail": "quality=84.68/100, valid=True, solutions=1, notes=['Coverage: acceptable but improvable (85.4%)', 'Bathroom access: excellent — directly connected to Hall', 'Connectivity: rooms form one connected layout', 'Daylight: 100% of main rooms touch exterior']"
+      "detail": "quality=86.02/100, valid=True, solutions=1800, notes=['Coverage: acceptable but improvable (89.6%)', 'Bathroom access: excellent — directly connected to Hall', 'Connectivity: rooms form one connected layout', 'Daylight: 100% of main rooms touch exterior']"
     },
     {
       "section": "optional",
@@ -81,23 +81,23 @@
       "earned": 0.0,
       "possible": 10.0,
       "passed": false,
-      "detail": "quality=82.8/100, coverage=86.5%, solutions=1, nodes=13"
+      "detail": "quality=85.62/100, coverage=88.5%, solutions=3000, nodes=5570"
     },
     {
       "section": "optional",
       "name": "Optimization / pruning on challenge",
-      "earned": 0.0,
+      "earned": 4.0,
       "possible": 8.0,
       "passed": false,
-      "detail": "solutions_seen=1, pruned_values=0"
+      "detail": "solutions_seen=3000, pruned_values=4632"
     },
     {
       "section": "optional",
       "name": "Soft score function",
-      "earned": 0.0,
+      "earned": 5.0,
       "possible": 5.0,
-      "passed": false,
-      "detail": "exception: NotImplementedError: TODO: implement score_assignment() in student/scoring.py"
+      "passed": true,
+      "detail": "expected meaningful non-constant scores; easy=70.70952380952382, hard=66.14166666666668"
     }
   ],
   "python": "3.14.5",
