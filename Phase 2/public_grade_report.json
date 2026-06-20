@@ -1,15 +1,15 @@
 {
   "grader": "PlanForge Public Self-Check",
   "note": "This public grader is only a self-check. Final grades are computed with a different private grader and hidden cases.",
-  "required_score": 20.0,
+  "required_score": 100.0,
   "required_max": 100.0,
-  "required_percent": 20.0,
+  "required_percent": 100.0,
   "optional_score": 0.0,
   "optional_max": 30.0,
   "optional_percent": 0.0,
-  "total_score": 20.0,
+  "total_score": 100.0,
   "total_max": 130.0,
-  "total_percent": 15.38,
+  "total_percent": 76.92,
   "rows": [
     {
       "section": "required",
@@ -22,42 +22,42 @@
     {
       "section": "required",
       "name": "MRV/LCV smoke check",
-      "earned": 0.0,
+      "earned": 15.0,
       "possible": 15.0,
-      "passed": false,
-      "detail": "exception: NotImplementedError: TODO: implement select_unassigned_variable() in student/heuristics.py"
+      "passed": true,
+      "detail": "MRV=ok, LCV=ok"
     },
     {
       "section": "required",
       "name": "Valid layout on easy_apartment.json",
-      "earned": 0.0,
+      "earned": 22.0,
       "possible": 22.0,
-      "passed": false,
-      "detail": "valid=False, quality=0.0/100, nodes=0, solutions=0, errors=['no valid assignment returned'], status=not_implemented, error=TODO: implement solve() in student/solver.py"
+      "passed": true,
+      "detail": "valid=True, quality=81.7/100, nodes=7, solutions=1"
     },
     {
       "section": "required",
       "name": "Valid layout on medium_apartment.json",
-      "earned": 0.0,
+      "earned": 22.0,
       "possible": 22.0,
-      "passed": false,
-      "detail": "valid=False, quality=0.0/100, nodes=0, solutions=0, errors=['no valid assignment returned'], status=not_implemented, error=TODO: implement solve() in student/solver.py"
+      "passed": true,
+      "detail": "valid=True, quality=78.87/100, nodes=8, solutions=1"
     },
     {
       "section": "required",
       "name": "Unsat detection",
-      "earned": 0.0,
+      "earned": 12.0,
       "possible": 12.0,
-      "passed": false,
-      "detail": "assignment_found=False, status=not_implemented"
+      "passed": true,
+      "detail": "assignment_found=False, status=no_solution"
     },
     {
       "section": "required",
       "name": "Backtracking instrumentation",
-      "earned": 0.0,
+      "earned": 9.0,
       "possible": 9.0,
-      "passed": false,
-      "detail": "nodes=0, assignments=0, backtracks=0, checks=0"
+      "passed": true,
+      "detail": "nodes=8, assignments=115, backtracks=7, checks=115"
     },
     {
       "section": "required",
@@ -73,7 +73,7 @@
       "earned": 0.0,
       "possible": 7.0,
       "passed": false,
-      "detail": "quality=0.0/100, valid=False, solutions=0, notes=['no assignment']"
+      "detail": "quality=84.68/100, valid=True, solutions=1, notes=['Coverage: acceptable but improvable (85.4%)', 'Bathroom access: excellent — directly connected to Hall', 'Connectivity: rooms form one connected layout', 'Daylight: 100% of main rooms touch exterior']"
     },
     {
       "section": "optional",
@@ -81,7 +81,7 @@
       "earned": 0.0,
       "possible": 10.0,
       "passed": false,
-      "detail": "quality=0.0/100, coverage=0.0%, solutions=0, nodes=0"
+      "detail": "quality=82.8/100, coverage=86.5%, solutions=1, nodes=13"
     },
     {
       "section": "optional",
@@ -89,7 +89,7 @@
       "earned": 0.0,
       "possible": 8.0,
       "passed": false,
-      "detail": "solutions_seen=0, pruned_values=0"
+      "detail": "solutions_seen=1, pruned_values=0"
     },
     {
       "section": "optional",
@@ -97,7 +97,7 @@
       "earned": 0.0,
       "possible": 5.0,
       "passed": false,
-      "detail": "expected meaningful non-constant scores; easy=None, hard=None"
+      "detail": "exception: NotImplementedError: TODO: implement score_assignment() in student/scoring.py"
     }
   ],
   "python": "3.14.5",

@@ -58,31 +58,52 @@ def backtrack(problem: CSPProblem, assignment: Assignment, domains: dict[str, li
     if ctx.should_stop:
         return
     
-    # We don't use MRV/LCV yet, we just take the first variable without a value
+    # If all rooms are placed, we have a full solution.
     if is_complete(problem, assignment):
-        ctx.on_solution(assignment)        # Validate and record answers 
+        ctx.on_solution(assignment)        # Framework validates and records answers 
         return
 
-    # Step 6: MRV: pick the variable with the fewest remaining consistent values
+    # Step 6: MRV: choose the variable with fewest remaining consistent values
     # In the backtrack function, instead of the original for loop, we use this for MRV (Step 6):
     # MRV causes variables with smaller ranges to be selected first, so that invalid values are removed from the domain earlier
     var = select_unassigned_variable(problem, assignment, domains)
 
-    # Step 7: Use LCV (Least Constraining Value) to order the domain values
-    # LCV heuristic: try values that leave more options for other variables first
+    # Tell the visualizer which room we're picking next
+    ctx.on_select_variable(var, assignment)
+
+    # Step 7: LCV (LCV heuristic): try values that leave more options for other variables first
     for value in order_domain_values(problem, var, assignment, domains):
-        ctx.on_assignment_tried()     # Count the number of assignments tried
-        ctx.on_consistency_check()    # Count compatibility checks
+        ctx.on_assignment_tried()
+        ctx.on_consistency_check()
+
         if is_consistent(problem, assignment, var, value):
             assignment[var] = value
+
+            # Record this placement so the visual mode can animate it
+            ctx.on_assign(var, value, assignment)
+
+            # Recursively continue the search with this new assignment
+            # Go deeper into the search tree
             backtrack(problem, assignment, domains, ctx)
-            # If the answer is found, we will return.
-            if ctx.best_assignment is not None:
-                assignment.pop(var, None)
-                return
+
+            # Undo the choice before trying something else
             assignment.pop(var, None)
 
-    ctx.on_backtrack()     # Record a backtrack (the current branch failed)
+            # Update the visualizer to show that we're stepping back
+            ctx.on_unassign(var, assignment)
+
+            # Stop cleanly if the framework limit was reached
+            if ctx.should_stop:
+                ctx.on_backtrack()
+                return
+
+            # A valid solution was found deeper in the tree, so we can finish this search branch
+            if ctx.best_assignment is not None:
+                ctx.on_backtrack()
+                return
+
+    # No value worked for this variable, so this branch ends here
+    ctx.on_backtrack()
 
 def is_complete(problem: CSPProblem, assignment: Assignment) -> bool:
     """Return True iff every variable has a value."""
