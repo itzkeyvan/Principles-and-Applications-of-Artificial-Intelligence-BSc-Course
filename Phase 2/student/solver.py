@@ -2,6 +2,7 @@ from __future__ import annotations
 from planforge.core.models import CSPProblem, Assignment, Rect
 from planforge.core.engine import SolverContext
 from .consistency import is_consistent
+from .heuristics import select_unassigned_variable
 
 # -----------------------------------------------------------------------------
 # STUDENT TODO FILE
@@ -61,12 +62,9 @@ def backtrack(problem: CSPProblem, assignment: Assignment, domains: dict[str, li
         ctx.on_solution(assignment)        # Validate and record answers 
         return
 
-    # Select the first variable without a value (Later replaced by MRV)
-    for var in problem.variables:
-        if var not in assignment:
-            break
-    else:
-        return  # Shouldn't happen.
+    # In the backtrack function, instead of the original for loop, we use this for MRV (Step 6):
+    # MRV causes variables with smaller ranges to be selected first, so that invalid values are removed from the domain earlier
+    var = select_unassigned_variable(problem, assignment, domains)
 
     # Test all values ​​in order (no LCV)
     for value in domains[var]:
