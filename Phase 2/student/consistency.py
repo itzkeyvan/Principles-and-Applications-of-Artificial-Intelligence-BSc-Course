@@ -1,6 +1,7 @@
 from __future__ import annotations
 from planforge.core.models import CSPProblem, Assignment, Rect
 from planforge.core.geometry import inside_boundary, overlaps
+from planforge.core.constraints import constraint_is_satisfied
 # -----------------------------------------------------------------------------
 # STUDENT TODO FILE
 # Required function:
@@ -36,6 +37,12 @@ def is_consistent(problem: CSPProblem, assignment: Assignment, variable: str, va
     for assigned_var, assigned_rect in assignment.items():
         if overlaps(value, assigned_rect):
             return False
+        
+    # 4) Explicit constraints
+    temp_assignment = dict(assignment)
+    temp_assignment[variable] = value
+    for constraint in problem.constraints:
+        if not constraint_is_satisfied(problem, constraint, temp_assignment):
+            return False
 
     return True
-    raise NotImplementedError('TODO: implement is_consistent() in student/consistency.py')
